@@ -21,23 +21,28 @@ class MorfeusInterface():
 
     def analyse_sentence(self, text):
         analysys = self.morfeusz_object.analyse(text)
+        vulgarism = False
         for i, j, interp in analysys:
-            # print(i,j,interp)
+            if len(interp[4]) != 0 and interp[4][0] == 'wulg.':
+                vulgarism = True
             self.get_verbs(interp)
             self.get_nouns(interp)
             self.get_adjectives(interp)
         verbs_df_object = self.convert_list_to_df_with_columns_name(self.verbs)
         nouns_df_object = self.convert_list_to_df_with_columns_name(self.nouns)
         adjectives_df_object = self.convert_list_to_df_with_columns_name(self.adjectives)
-        return verbs_df_object, nouns_df_object, adjectives_df_object
+        return verbs_df_object, nouns_df_object, adjectives_df_object, vulgarism
 
     def generate_markers(self, word):
         generator = []
         analysys = self.morfeusz_object.analyse(word)
+        vulgarism = False
         for i, j, interp in analysys:
+            if len(interp[4]) != 0 and interp[4][0] == 'wulg.':
+                vulgarism = True
             generator.append(interp)
         generator_df_object = self.convert_list_to_df_with_columns_name(generator)
-        return generator_df_object
+        return generator_df_object, vulgarism
 
     def tokenize(self, text):
         tokens = nltk.word_tokenize(text.lower())

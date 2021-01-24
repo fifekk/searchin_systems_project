@@ -17,7 +17,7 @@ analyser = Analyser()
 
 def write_df_and_title_to_streamlit(df, title):
     st.write(title)
-    st.write(df)
+    st.table(df)
 
 
 def check_if_variable_is_instance_of_pd_df_and_write_to_streamlit(variable_to_check, title):
@@ -26,6 +26,10 @@ def check_if_variable_is_instance_of_pd_df_and_write_to_streamlit(variable_to_ch
 
 
 if col1.button("Analizuj tekst"):
+    del markers_df
+    verbs_df, nouns_df, adjectives_df, vulgarism = morfeus.analyse_sentence(user_input)
+    if vulgarism:
+        st.error("W tekście wykryto wulgaryzmy.")
     st.sidebar.title('Analiza częstości słów i znaków')
     clear_text = analyser.tokenize(user_input)
     clear_text = analyser.remove_punctuation(clear_text)
@@ -49,8 +53,6 @@ if col1.button("Analizuj tekst"):
     dataframe = dataframe.sort_values(by=['Licznik'], ascending=False)
     st.sidebar.table(dataframe.style.format({'Częstość [%]': "{:.2%}"}))
 
-    del markers_df
-    verbs_df, nouns_df, adjectives_df = morfeus.analyse_sentence(user_input)
     if not verbs_df.empty:
         write_df_and_title_to_streamlit(verbs_df, "Czasowniki")
         past, future = morfeus.split_verbs_to_future_and_past(verbs_df)
@@ -73,5 +75,7 @@ if col2.button("Generuj znaczniki"):
         st.error("Proszę podać jeden lemat")
     else:
         markers = []
-        generator_output = morfeus.generate_markers(user_input)
-        st.write(generator_output)
+        generator_output, vulgarism = morfeus.generate_markers(user_input)
+        if vulgarism:
+            st.error("Wykryto wylgaryzm")
+        st.table(generator_output)
