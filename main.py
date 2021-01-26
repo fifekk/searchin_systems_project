@@ -4,7 +4,7 @@ import streamlit as st
 from analyser import Analyser
 from morfeus_interface import MorfeusInterface
 
-st.title("Morfeus and python integration")
+st.title("Integracja pythona z morfeuszem")
 nouns = []
 adjectives = []
 verbs = []
@@ -48,16 +48,17 @@ if col1.button("Analizuj tekst"):
 
     st.sidebar.text('Częstość słów')
     dataframe.columns = ['Licznik']
-    dataframe['Częstość [%]'] = dataframe['Licznik'] / sum(dataframe['Licznik'])
-    dataframe['Częstość [%]'] = [round(x, 2) for x in dataframe['Częstość [%]']]
+    dataframe['Częstość'] = dataframe['Licznik'] / sum(dataframe['Licznik'])
+    dataframe['Częstość'] = [round(x, 2) for x in dataframe['Częstość']]
     dataframe = dataframe.sort_values(by=['Licznik'], ascending=False)
-    st.sidebar.table(dataframe.style.format({'Częstość [%]': "{:.2%}"}))
+    st.sidebar.table(dataframe.style.format({'Częstość': "{:.2%}"}))
 
     if not verbs_df.empty:
         write_df_and_title_to_streamlit(verbs_df, "Czasowniki")
         past, future = morfeus.split_verbs_to_future_and_past(verbs_df)
         check_if_variable_is_instance_of_pd_df_and_write_to_streamlit(past, "Czasowniki w czasie przeszłym")
-        check_if_variable_is_instance_of_pd_df_and_write_to_streamlit(future, "Czasowniki w czasie nieprzeszłym")
+        check_if_variable_is_instance_of_pd_df_and_write_to_streamlit(future,
+                                                                      "Czasowniki w czasie nieprzeszłym (teraźniejszy/przyszły)")
     if not nouns_df.empty:
         write_df_and_title_to_streamlit(nouns_df, "Rzeczowniki")
     if not adjectives_df.empty:
