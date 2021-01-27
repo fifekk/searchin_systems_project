@@ -14,3 +14,5 @@
 requirements.txt,1\9\19359a61ae2446b51b549167b014da2fcf265768
 D
 morfeus_interface.py,8\3\83df7ab0c6a881caa917d4c94fcdf33a5f29fcdc
+;
+analyser.py,2\0\20685f0a3631f64bafe32ea2d08296084b422502
